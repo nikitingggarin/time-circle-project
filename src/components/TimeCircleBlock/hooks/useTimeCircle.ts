@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 import { UseTimeCircleReturn, TimePointData, TimePointWithPosition } from '../types';
 import { timePointsData } from '../constants';
-    
+import { Swiper as SwiperType } from 'swiper/types';
 
 const circleRadius = 265;
 const centerX = 265;
@@ -17,7 +17,7 @@ export const useTimeCircle = (
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [currentRotation, setCurrentRotation] = useState<number>(0);
   const [timePoints, setTimePoints] = useState<TimePointData[]>(timePointsData);
-
+  const swiperRef = useRef<SwiperType | null>(null);
   const getMinMaxYears = useCallback((events: any[]) => {
     if (events.length === 0) return { minYear: null, maxYear: null };
     
@@ -84,6 +84,9 @@ export const useTimeCircle = (
         setCenterHour(clickedPoint.hour);
         setIsEventsVisible(true);
         setIsAnimating(false);
+        if (swiperRef.current && !swiperRef.current.isBeginning) {
+          swiperRef.current.slidePrev();
+        }
       }
     });
   }, [centerHour, isAnimating, calculateRotationAngle, getMinMaxYears, animateYearChange, setIsEventsVisible]);
@@ -122,6 +125,7 @@ export const useTimeCircle = (
     activeCategoryIndex,
     handlePointClick,
     handlePrevCategory,
-    handleNextCategory
+    handleNextCategory,
+    swiperRef
   };
 };

@@ -45,7 +45,7 @@ export const TimeCircleBlock: React.FC = () => {
     isBeginning,
     isEnd,
     isEventsVisible,
-    swiperRef,
+    swiperRef: swiperRefNavigation,
     setIsEventsVisible,
     handlePrevSlide,
     handleNextSlide,
@@ -62,11 +62,11 @@ export const TimeCircleBlock: React.FC = () => {
     activeCategory,
     handlePointClick,
     handlePrevCategory,
-    handleNextCategory
+    handleNextCategory,
+    swiperRef: swiperRefCircle
   } = useTimeCircle(setIsEventsVisible, animateYearChange);
 
   const events: EventItem[] = activeCategory?.data.data.events || [];
-console.log('activeCategory', activeCategory);
 
   return (
     <PageWrapper>
@@ -110,16 +110,16 @@ console.log('activeCategory', activeCategory);
                   key={point.id}
                   x={point.position.x}
                   y={point.position.y}
-                  isActive={point.isActive}
-                  isHoverable={isHoverable}
+                  $isActive={point.isActive}
+                  $isHoverable={isHoverable}
                   onClick={() => handlePointClick(point)}
                 >
                   <PointNumber 
-                    isActive={point.isActive} 
-                    isHoverable={isHoverable}
-                    rotation={currentRotation}
+                    $isActive={point.isActive} 
+                    $isHoverable={isHoverable}
+                    $rotation={currentRotation}
                   >
-                    {point.id}  <Title isActive={point.isActive && !isAnimating}>{point.data.title}</Title>
+                    {point.id}  <Title $isActive={point.isActive && !isAnimating}>{point.data.title}</Title>
                   </PointNumber>
                 </TimePoint>
               );
@@ -128,11 +128,11 @@ console.log('activeCategory', activeCategory);
         </RotatableCircle>
 
         {activeCategory && (
-          <EventsContainer isVisible={isEventsVisible}>
+          <EventsContainer $isVisible={isEventsVisible}>
             <Swiper
               modules={[Navigation, Mousewheel]}
               navigation={false}
-              mousewheel={true}
+              // mousewheel={true}
               slidesPerView={'auto'}
               spaceBetween={80}
               onSlideChange={(swiper: SwiperType) => {
@@ -140,7 +140,8 @@ console.log('activeCategory', activeCategory);
                 setIsEnd(swiper.isEnd);
               }}
               onSwiper={(swiper: SwiperType) => {
-                swiperRef.current = swiper;
+                swiperRefNavigation.current = swiper;
+                swiperRefCircle.current = swiper;
                 setIsBeginning(swiper.isBeginning);
                 setIsEnd(swiper.isEnd);
               }}
@@ -156,13 +157,13 @@ console.log('activeCategory', activeCategory);
             </Swiper>
 
             <NavigationButton 
-              position="left"
-              isVisible={!isBeginning && isEventsVisible}
+              $position="left"
+              $isVisible={!isBeginning && isEventsVisible}
               onClick={handlePrevSlide}
             />
             <NavigationButton 
-              position="right"
-              isVisible={!isEnd && isEventsVisible}
+              $position="right"
+              $isVisible={!isEnd && isEventsVisible}
               onClick={handleNextSlide}
             />
           </EventsContainer>

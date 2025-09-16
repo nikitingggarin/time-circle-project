@@ -41,6 +41,7 @@ export interface UseTimeCircleReturn {
   handlePointClick: (clickedPoint: TimePointData) => void;
   handlePrevCategory: () => void;
   handleNextCategory: () => void;
+  swiperRef: React.MutableRefObject<SwiperType | null>;
 }
 
 export interface UseYearsAnimationReturn {
